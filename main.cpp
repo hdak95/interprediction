@@ -197,7 +197,7 @@ int main() {
 		}
 	}
 	MAE /= height * width * 3 / 2;
-	cout << MAE;
+	cout << "prediction MAE : " << MAE << endl;
 
 
 	outputFile.open("./Suzie_CIF_prediction(352x288).yuv", ios::binary);
@@ -224,6 +224,17 @@ int main() {
 	for (int i = 0; i < height * width * 3 / 2; i++) {
 		reconstruction[i] = residual[i] + prediction[i];
 	}
+
+	MAE = 0;
+	for (int i = 0; i < height; i++) {
+		for (int j = 0; j < width; j++) {
+			MAE += abs(yuvCur[i * width + j] - reconstruction[i * width + j]);
+			MAE += abs(yuvCur[height * width + i / 2 * width / 2 + j / 2] - reconstruction[height * width + i / 2 * width / 2 + j / 2]);
+			MAE += abs(yuvCur[height * width * 5 / 4 + i / 2 * width / 2 + j / 2] - reconstruction[height * width * 5 / 4 + i / 2 * width / 2 + j / 2]);
+		}
+	}
+	MAE /= height * width * 3 / 2;
+	cout << "reconstruction MAE : " << MAE << endl;
 
 	outputFile.open("./Suzie_CIF_reconstruction(352x288).yuv", ios::binary);
 	outputFile.write((char*)reconstruction, height * width * 3 / 2);
